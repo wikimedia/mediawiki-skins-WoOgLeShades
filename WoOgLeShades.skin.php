@@ -13,15 +13,24 @@ class SkinWoOgLeShades extends SkinTemplate {
 	 *
 	 * @param $out OutputPage
 	 */
-	function setupSkinUserCss( OutputPage $out ) {
-		parent::setupSkinUserCss( $out );
+	public function initPage( OutputPage $out ) {
 
 		$out->addMeta( 'viewport', 'width=device-width, initial-scale=1.0' );
 
 		$out->addModuleStyles( array(
+			'mediawiki.skinning.interface',
 			'mediawiki.skinning.content.externallinks',
 			'skins.woogleshades'
 		) );
-		$out->addModules( array( 'skins.woogleshades.js' ) );
+		$out->addModules( array(
+			'skins.woogleshades.js'
+		) );
+	}
+
+	/**
+	 * @param $out OutputPage
+	 */
+	function setupSkinUserCss( OutputPage $out ) {
+		parent::setupSkinUserCss( $out );
 	}
 }
