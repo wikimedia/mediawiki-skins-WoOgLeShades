@@ -18,7 +18,6 @@
 	"ResourceModules": {
 		"skins.woogleshades": {
 			"class": "ResourceLoaderSkinModule",
-			"position": "top",
 			"styles": {
 				"resources/libraries/normalise.css": {
 					"media": "screen"
@@ -38,7 +37,6 @@
 			}
 		},
 		"skins.woogleshades.js": {
-			"position": "bottom",
 			"scripts": [
 				"resources/main.js"
 			]
