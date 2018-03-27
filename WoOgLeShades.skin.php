@@ -6,7 +6,7 @@
  */
 class SkinWoOgLeShades extends SkinTemplate {
 	public $skinname = 'woogleshades', $stylename = 'WoOgLeShades',
-		$template = 'WoOgLeShadesTemplate', $useHeadElement = true;
+		$template = 'WoOgLeShadesTemplate';
 
 	/**
 	 * Add CSS via ResourceLoader
