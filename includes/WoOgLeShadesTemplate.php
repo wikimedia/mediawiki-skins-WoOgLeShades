@@ -30,7 +30,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 				Html::rawElement( 'div', [ 'class' => 'mw-body-content' ],
 					Html::rawElement( 'div', [ 'id' => 'contentSub' ],
 						$this->getPageSubtitle() .
-						Html::rawElement (
+						Html::rawElement(
 							'p',
 							[],
 							$this->get( 'undelete' )
@@ -109,9 +109,9 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 				[
 					'id' => 'p-banner',
 					'class' => 'mw-wiki-title',
-					'href'=> $this->data['nav_urls']['mainpage']['href']
+					'href' => $this->data['nav_urls']['mainpage']['href']
 				] + Linker::tooltipAndAccesskeyAttribs( 'p-logo' ),
-				$this->getMsg( 'sitetitle' )->escaped()
+				$this->getMsg( 'sitetitle' )->text()
 			);
 		}
 		$html .= Html::closeElement( 'div' );
@@ -133,7 +133,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 				'id' => 'p-search'
 			]
 		);
-		$html .= Html::hidden( 'title', htmlspecialchars( $this->get( 'searchtitle' ) ) );
+		$html .= Html::hidden( 'title', $this->get( 'searchtitle' ) );
 		$html .= Html::rawElement(
 			'h3',
 			[],
@@ -271,7 +271,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 	 */
 	protected function getPageSubtitle() {
 		if ( $this->data['subtitle'] ) {
-			return Html::rawElement (
+			return Html::rawElement(
 				'p',
 				[],
 				$this->get( 'subtitle' )

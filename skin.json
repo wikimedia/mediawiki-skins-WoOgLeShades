@@ -47,8 +47,8 @@
 		"remoteSkinPath": "WoOgLeShades"
 	},
 	"AutoloadClasses": {
-		"SkinWoOgLeShades": "WoOgLeShades.skin.php",
-		"WoOgLeShadesTemplate": "WoOgLeShadesTemplate.php"
+		"SkinWoOgLeShades": "includes/SkinWoOgLeShades.php",
+		"WoOgLeShadesTemplate": "includes/WoOgLeShadesTemplate.php"
 	},
 	"manifest_version": 1
 }
