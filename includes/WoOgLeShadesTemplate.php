@@ -71,6 +71,12 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 					'div',
 					[ 'id' => 'site-navigation' ],
 					$this->getSiteNavigation()
+				) .
+				// Global navigation
+				Html::rawElement(
+					'div',
+					[ 'id' => 'global-navigation' ],
+					$this->getGlobalLinks()
 				)
 			) .
 			$this->getFooter()
@@ -188,6 +194,87 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 					break;
 			}
 		}
+		return $html;
+	}
+
+	/**
+	 * Print arbitrary block of navigation
+	 * Message parsing is limited to first 10 lines only for this skin.
+	 *
+	 * @param string $linksMessage
+	 * @param string $id
+	 */
+	protected function getNavigation( $linksMessage, $id ) {
+		$message = trim( $this->getMsg( $linksMessage )->text() );
+		$lines = array_slice( explode( "\n", $message ), 0, 10 );
+		$links = [];
+		foreach ( $lines as $line ) {
+			// ignore empty lines
+			if ( strlen( $line ) == 0 ) {
+				continue;
+			}
+
+			$item = [];
+
+			$line_temp = explode( '|', trim( $line, '* ' ), 3 );
+			if ( count( $line_temp ) > 1 ) {
+				$line = $line_temp[1];
+				$link = $this->getMsg( $line_temp[0] )->inContentLanguage()->text();
+
+				// Pull out third item as a class
+				if ( count( $line_temp ) == 3 ) {
+					$item['class'] = htmlspecialchars( Sanitizer::escapeIdForAttribute( $line_temp[2] ) );
+				}
+			} else {
+				$line = $line_temp[0];
+				$link = $line_temp[0];
+			}
+			$item['id'] =  htmlspecialchars( Sanitizer::escapeIdForAttribute( $line ) );
+
+			// Determine what to show as the human-readable link description
+			if ( $this->getMsg( $line )->isDisabled() ) {
+				// It's *not* the name of a MediaWiki message, so display it as-is
+				$item['text'] = $line;
+			} else {
+				// Guess what -- it /is/ a MediaWiki message!
+				$item['text'] = $this->getMsg( $line )->text();
+			}
+
+			if ( $link !== null ) {
+				if ( $this->getMsg( $line_temp[0] )->isDisabled() ) {
+					$link = $line_temp[0];
+				}
+				if ( Skin::makeInternalOrExternalUrl( $link ) ) {
+					$href = $link;
+				} else {
+					$title = Title::newFromText( $link );
+					if ( $title ) {
+						$title = $title->fixSpecialName();
+						$href = $title->getLocalURL();
+					} else {
+						$href = '#';
+					}
+				}
+			}
+			$item['href'] = $href;
+
+			$links[] = $item;
+		}
+
+		return $this->getPortlet( $id, $links );
+	}
+
+	/**
+	 * Menu for global navigation (for cross-wiki stuff or just whatever things)
+	 *
+	 * @return string html
+	 */
+	protected function getGlobalLinks() {
+		$html = '';
+		if ( !$this->getMsg( 'global-links-menu' )->isDisabled() ) {
+			$html = $this->getNavigation( 'global-links-menu', 'global-links-menu-header' );
+		}
+
 		return $html;
 	}
 
@@ -321,7 +408,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 			$msgParams = $msg;
 			$msg = $msgString;
 		}
-		$msgObj = wfMessage( $msg );
+		$msgObj = $this->getMsg( $msg );
 		if ( $msgObj->exists() ) {
 			if ( isset( $msgParams ) && !empty( $msgParams ) ) {
 				$msgString = $this->getMsg( $msg, $msgParams )->parse();
@@ -388,111 +475,6 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 				$this->getAfterPortlet( $name )
 			)
 		);
-
-		return $html;
-	}
-
-	/* DEPRECATED FUNCTIONS: remove if you're not intending to support versions of mw under their requirements */
-
-	/**
-	 * Get a div with the core visualClear class, for clearing floats
-	 *
-	 * @return string html
-	 * @since 1.29
-	 */
-	protected function getClear() {
-		return Html::element( 'div', [ 'class' => 'visualClear' ] );
-	}
-
-	/**
-	 * Renderer for getFooterIcons and getFooterLinks
-	 *
-	 * @param string $iconStyle $option for getFooterIcons: "icononly", "nocopyright"
-	 * @param string $linkStyle $option for getFooterLinks: "flat"
-	 *
-	 * @return string html
-	 * @since 1.29
-	 */
-	protected function getFooter( $iconStyle = 'icononly', $linkStyle = 'flat' ) {
-		$validFooterIcons = $this->getFooterIcons( $iconStyle );
-		$validFooterLinks = $this->getFooterLinks( $linkStyle );
-
-		$html = '';
-
-		if ( count( $validFooterIcons ) + count( $validFooterLinks ) > 0 ) {
-			$html .= Html::openElement( 'div', [
-				'id' => 'footer-bottom',
-				'role' => 'contentinfo',
-				'lang' => $this->get( 'userlang' ),
-				'dir' => $this->get( 'dir' )
-			] );
-			$footerEnd = Html::closeElement( 'div' );
-		} else {
-			$footerEnd = '';
-		}
-		foreach ( $validFooterIcons as $blockName => $footerIcons ) {
-			$html .= Html::openElement( 'div', [
-				'id' => 'f-' . Sanitizer::escapeId( $blockName ) . 'ico',
-				'class' => 'footer-icons'
-			] );
-			foreach ( $footerIcons as $icon ) {
-				$html .= $this->getSkin()->makeFooterIcon( $icon );
-			}
-			$html .= Html::closeElement( 'div' );
-		}
-		if ( count( $validFooterLinks ) > 0 ) {
-			$html .= Html::openElement( 'ul', [ 'id' => 'f-list', 'class' => 'footer-places' ] );
-			foreach ( $validFooterLinks as $aLink ) {
-				$html .= Html::rawElement(
-					'li',
-					[ 'id' => Sanitizer::escapeId( $aLink ) ],
-					$this->get( $aLink )
-				);
-			}
-			$html .= Html::closeElement( 'ul' );
-		}
-
-		$html .= $this->getClear() . $footerEnd;
-
-		return $html;
-	}
-
-	/**
-	 * Allows extensions to hook into known portlets and add stuff to them
-	 *
-	 * @param string $name
-	 *
-	 * @return string html
-	 * @since 1.29
-	 */
-	protected function getAfterPortlet( $name ) {
-		$html = '';
-		$content = '';
-		Hooks::run( 'BaseTemplateAfterPortlet', [ $this, $name, &$content ] );
-
-		if ( $content !== '' ) {
-			$html = Html::rawElement(
-				'div',
-				[ 'class' => [ 'after-portlet', 'after-portlet-' . $name ] ],
-				$content
-			);
-		}
-
-		return $html;
-	}
-
-	/**
-	 * Get the basic end-page trail including bottomscripts, reporttime, and
-	 * debug stuff. This should be called right before outputting the closing
-	 * body and html tags.
-	 *
-	 * @return string
-	 * @since 1.29
-	 */
-	function getTrail() {
-		$html = MWDebug::getDebugHTML( $this->getSkin()->getContext() );
-		$html .= $this->get( 'bottomscripts' );
-		$html .= $this->get( 'reporttime' );
 
 		return $html;
 	}
