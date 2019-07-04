@@ -136,7 +136,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 		$html = Html::openElement(
 			'form',
 			[
-				'action' => htmlspecialchars( $this->get( 'wgScript' ) ),
+				'action' => $this->get( 'wgScript' ),
 				'role' => 'search',
 				'class' => 'mw-portlet',
 				'id' => 'p-search'
