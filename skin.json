@@ -42,6 +42,11 @@
 			]
 		}
 	},
+	"ResourceModuleSkinStyles": {
+		"woogleshades": {
+			"+ext.echo.styles.badge": "resources/extensions/Echo.less"
+		}
+	},
 	"ResourceFileModulePaths": {
 		"localBasePath": "",
 		"remoteSkinPath": "WoOgLeShades"

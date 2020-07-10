@@ -20,13 +20,16 @@ class SkinWoOgLeShades extends SkinTemplate {
 			'user-scalable=yes, minimum-scale=0.25, maximum-scale=5.0'
 		);
 		$out->addModuleStyles( [
-			'mediawiki.skinning.interface',
 			'mediawiki.skinning.content.externallinks',
 			'skins.woogleshades'
 		] );
 		$out->addModules( [
 			'skins.woogleshades.js'
 		] );
+
+		// TODO Ditch this and come up with an actual font stack
+		$out->addStyle( 'https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i', 'screen' );
+		$out->addStyle( 'https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700,700i', 'screen' );
 	}
 
 	/**

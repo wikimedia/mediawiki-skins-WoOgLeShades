@@ -13,73 +13,102 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 		$html .= $this->get( 'headelement' );
 
 		$html .= Html::rawElement( 'div', [ 'id' => 'mw-wrapper' ],
-			Html::rawElement( 'div', [ 'class' => 'mw-body', 'id' => 'content', 'role' => 'main' ],
-				$this->getSiteNotice() .
-				$this->getNewTalk() .
-				$this->getIndicators() .
-				Html::rawElement( 'h1',
-					[
-						'class' => 'firstHeading',
-						'lang' => $this->get( 'pageLanguage' )
-					],
-					$this->get( 'title' )
-				) .
-				Html::rawElement( 'div', [ 'id' => 'siteSub' ],
-					$this->getMsg( 'tagline' )->parse()
-				) .
-				Html::rawElement( 'div', [ 'class' => 'mw-body-content' ],
-					Html::rawElement( 'div', [ 'id' => 'contentSub' ],
-						$this->getPageSubtitle() .
+			Html::rawElement( 'div', [ 'id' => 'header' ],
+				Html::rawElement( 'div', [ 'id' => 'mw-navigation-outer' ],
+					Html::rawElement( 'div', [ 'id' => 'mw-navigation' ],
+						$this->getLogo() .
 						Html::rawElement(
-							'p',
+							'h2',
 							[],
-							$this->get( 'undelete' )
-						)
-					) .
-					$this->get( 'bodycontent' ) .
-					$this->getClear() .
-					Html::rawElement( 'div', [ 'class' => 'printfooter' ],
-						$this->get( 'printfooter' )
-					) .
-					$this->getCategoryLinks() .
-					$this->getDataAfterContent() .
-					$this->get( 'debughtml' )
-				)
-			) .
-			Html::rawElement( 'div', [ 'id' => 'mw-navigation' ],
-				Html::rawElement(
-					'h2',
-					[],
-					$this->getMsg( 'navigation-heading' )->parse()
+							$this->getMsg( 'navigation-heading' )->parse()
+						) .
+						// User profile links
+						Html::rawElement(
+							'div',
+							[ 'id' => 'user-tools' ],
+							$this->getUserLinks()
+						) .
+						$this->getSearch() .
+						// Global navigation
+						Html::rawElement(
+							'div',
+							[ 'id' => 'global-navigation' ],
+							$this->getGlobalLinks()
+
+						) .
+						$this->getClear()
+					)
 				) .
-				$this->getLogo() .
-				$this->getSearch() .
-				// User profile links
-				Html::rawElement(
-					'div',
-					[ 'id' => 'user-tools' ],
-					$this->getUserLinks()
-				) .
+				Html::rawElement( 'div', [ 'id' => 'mw-sidebar-outer' ],
+					Html::rawElement ( 'div', [ 'id' => 'mw-sidebar' ],
+						$this->getBanner() .
+						// Site navigation/sidebar
+						Html::rawElement(
+							'div',
+							[ 'id' => 'site-navigation' ],
+							$this->getSiteNavigation() .
+							// Toolbox
+							$this->getPortlet(
+								'tb',
+								$this->getToolbox(),
+								'toolbox'
+							)
+						) .
+						$this->getClear()
+					)
+				).
 				// Page editing and tools
-				Html::rawElement(
-					'div',
-					[ 'id' => 'page-tools' ],
-					$this->getPageLinks()
-				) .
-				// Site navigation/sidebar
-				Html::rawElement(
-					'div',
-					[ 'id' => 'site-navigation' ],
-					$this->getSiteNavigation()
-				) .
-				// Global navigation
-				Html::rawElement(
-					'div',
-					[ 'id' => 'global-navigation' ],
-					$this->getGlobalLinks()
+				Html::rawElement( 'div', [ 'id' => 'page-tools-outer' ],
+					Html::rawElement( 'div', [ 'id' => 'page-tools' ],
+						Html::rawElement( 'div', [ 'id' => 'page-tools-left' ],
+							$this->getPortlet(
+								'namespaces',
+								$this->data['content_navigation']['namespaces']
+							)
+						) .
+						$this->getPageToolsRight() .
+						$this->getClear()
+					)
 				)
 			) .
-			$this->getFooterBlock()
+			Html::rawElement( 'div', [ 'id' => 'content-outer' ],
+				Html::rawElement( 'div', [ 'class' => 'mw-body', 'id' => 'content', 'role' => 'main' ],
+					$this->getSiteNotice() .
+					$this->getNewTalk() .
+					$this->getIndicators() .
+					Html::rawElement( 'h1',
+						[
+							'class' => 'firstHeading',
+							'lang' => $this->get( 'pageLanguage' )
+						],
+						$this->get( 'title' )
+					) .
+					Html::rawElement( 'div', [ 'id' => 'siteSub' ],
+						$this->getMsg( 'tagline' )->parse()
+					) .
+					Html::rawElement( 'div', [ 'class' => 'mw-body-content' ],
+						Html::rawElement( 'div', [ 'id' => 'contentSub' ],
+							$this->getPageSubtitle() .
+							Html::rawElement(
+								'p',
+								[],
+								$this->get( 'undelete' )
+							)
+						) .
+						$this->get( 'bodycontent' ) .
+						$this->getClear() .
+						Html::rawElement( 'div', [ 'class' => 'printfooter' ],
+							$this->get( 'printfooter' )
+						) .
+						$this->getCategoryLinks() .
+						$this->getDataAfterContent() .
+						$this->get( 'debughtml' )
+					)
+				)
+			) .
+			Html::rawElement( 'div', [ 'id' => 'footer-outer' ],
+				$this->getFooterBlock()
+			)
 		);
 
 		$html .= $this->getTrail();
@@ -90,10 +119,13 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 	}
 
 	/**
-	 * Generates the logo and (optionally) site title
-	 * @return string html
+	 * Generates the logo image
+	 *
+	 * @param string $id ID for the element
+	 *
+	 * @return string HTML
 	 */
-	protected function getLogo( $id = 'p-logo', $imageOnly = false ) {
+	protected function getLogo( $id = 'p-logo' ) {
 		$html = Html::openElement(
 			'div',
 			[
@@ -109,20 +141,40 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 				'class' => 'mw-wiki-logo',
 			] + Linker::tooltipAndAccesskeyAttribs( 'p-logo' )
 		);
-		if ( !$imageOnly ) {
-			$language = $this->getSkin()->getLanguage();
-			$siteTitle = $language->convert( $this->getMsg( 'sitetitle' )->escaped() );
 
-			$html .= Html::rawElement(
-				'a',
-				[
-					'id' => 'p-banner',
-					'class' => 'mw-wiki-title',
-					'href' => $this->data['nav_urls']['mainpage']['href']
-				] + Linker::tooltipAndAccesskeyAttribs( 'p-logo' ),
-				$siteTitle
-			);
-		}
+		$html .= Html::closeElement( 'div' );
+
+		return $html;
+	}
+
+	/**
+	 * Generates the site title banner
+	 *
+	 * @param string $id ID for the element
+	 *
+	 * @return string HTML
+	 */
+	protected function getBanner( $id = 'p-banner' ) {
+		$html = Html::openElement(
+			'div',
+			[
+				'id' => $id,
+				'class' => 'mw-portlet',
+				'role' => 'banner'
+			]
+		);
+
+		$language = $this->getSkin()->getLanguage();
+		$siteTitle = $language->convert( $this->getMsg( 'sitetitle' )->escaped() );
+
+		$html .= Html::element(
+			'a',
+			[
+				'class' => 'mw-wiki-title',
+				'href' => $this->data['nav_urls']['mainpage']['href']
+			] + Linker::tooltipAndAccesskeyAttribs( 'p-logo' ),
+			$siteTitle
+		);
 		$html .= Html::closeElement( 'div' );
 
 		return $html;
@@ -130,7 +182,8 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 
 	/**
 	 * Generates the search form
-	 * @return string html
+	 *
+	 * @return string HTML
 	 */
 	protected function getSearch() {
 		$html = Html::openElement(
@@ -161,17 +214,18 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 	 * Or get rid of this entirely, and take the specific bits to use wherever you actually want them
 	 *  * Toolbox is the page/site tools that appears under the sidebar in vector
 	 *  * Languages is the interlanguage links on the page via en:... es:... etc
-	 *  * Default is each user-specified box as defined on MediaWiki:Sidebar; you will still need a foreach loop
-	 *    to parse these.
-	 * @return string html
+	 *  * Default is each user-specified box as defined on MediaWiki:Sidebar; you will still need a
+	 *    foreach loop to parse these.
+	 *
+	 * @return string HTML
 	 */
 	protected function getSiteNavigation() {
 		$html = '';
 
 		$sidebar = $this->getSidebar();
 		$sidebar['SEARCH'] = false;
-		$sidebar['TOOLBOX'] = true;
-		$sidebar['LANGUAGES'] = true;
+		$sidebar['TOOLBOX'] = false;
+		$sidebar['LANGUAGES'] = false;
 
 		foreach ( $sidebar as $name => $content ) {
 			if ( $content === false ) {
@@ -179,23 +233,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 			}
 			// Numeric strings gets an integer when set as key, cast back - T73639
 			$name = (string)$name;
-
-			switch ( $name ) {
-				case 'SEARCH':
-					$html .= $this->getSearch();
-					break;
-				case 'TOOLBOX':
-					$html .= $this->getPortlet( 'tb', $this->getToolbox(), 'toolbox', [ 'hooks' => 'SkinTemplateToolboxEnd' ] );
-					break;
-				case 'LANGUAGES':
-					if ( $this->data['language_urls'] !== false ) {
-						$html .= $this->getPortlet( 'lang', $this->data['language_urls'], 'otherlanguages' );
-					}
-					break;
-				default:
-					$html .= $this->getPortlet( $name, $content['content'] );
-					break;
-			}
+			$html .= $this->getPortlet( $name, $content['content'] );
 		}
 		return $html;
 	}
@@ -270,64 +308,138 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 	/**
 	 * Menu for global navigation (for cross-wiki stuff or just whatever things)
 	 *
-	 * @return string html
+	 * @return string HTML
 	 */
 	protected function getGlobalLinks() {
 		$html = '';
 		if ( !$this->getMsg( 'global-links-menu' )->isDisabled() ) {
-			$html = $this->getNavigation( 'global-links-menu', 'global-links-menu-header' );
+			$html = $this->getNavigation( 'global-links-menu', 'global-links' );
 		}
 
 		return $html;
 	}
 
 	/**
-	 * Generates page-related tools/links
-	 * You will probably want to split this up and move all of these to somewhere that makes sense for your skin.
-	 * @return string html
+	 * In other languages list
+	 *
+	 * @return string HTML
 	 */
-	protected function getPageLinks() {
-		// Namespaces: links for 'content' and 'talk' for namespaces with talkpages. Otherwise is just the content.
-		// Usually rendered as tabs on the top of the page.
-		$html = $this->getPortlet(
-			'namespaces',
-			$this->data['content_navigation']['namespaces']
-		);
-		// Variants: Language variants. Displays list for converting between different scripts in the same language,
-		// if using a language where this is applicable.
-		$html .= $this->getPortlet(
-			'variants',
-			$this->data['content_navigation']['variants']
-		);
-		// 'View' actions for the page: view, edit, view history, etc
-		$html .= $this->getPortlet(
-			'views',
-			$this->data['content_navigation']['views']
-		);
-		// Other actions for the page: move, delete, protect, everything else
-		$html .= $this->getPortlet(
-			'actions',
-			$this->data['content_navigation']['actions']
-		);
+	protected function getLanguageLinks() {
+		$html = '';
+		if ( $this->data['language_urls'] !== false ) {
+			$html .= $this->getPortlet( 'lang', $this->data['language_urls'], 'otherlanguages' );
+		}
+
+		return $html;
+	}
+
+	/**
+	 * Language variants. Displays list for converting between different scripts in the same language,
+	 * if using a language where this is applicable.
+	 *
+	 * @return string HTML
+	 */
+	protected function getVariants() {
+		$html = '';
+		if ( count( $this->data['content_navigation']['variants'] ) > 0 ) {
+			$html .= $this->getPortlet(
+				'variants',
+				$this->data['content_navigation']['variants']
+			);
+		}
+
+		return $html;
+	}
+
+	/**
+	 * Right cactions thing, if any
+	 * (Avoid wrapping an empty string)
+	 *
+	 * @return string HTML
+	 */
+	protected function getPageToolsRight() {
+		$html = '';
+		$junk = $this->getPortlet( 'views', $this->data['content_navigation']['views'] ) .
+			$this->getPortlet( 'actions', $this->data['content_navigation']['actions'] ) .
+			$this->getVariants() .
+			$this->getLanguageLinks();
+
+		if ( strlen( $junk ) ) {
+			$html = Html::rawElement( 'div', [ 'id' => 'page-tools-right' ], $junk );
+		}
 
 		return $html;
 	}
 
 	/**
 	 * Generates user tools menu
-	 * @return string html
+	 *
+	 * @return string HTML
 	 */
 	protected function getUserLinks() {
-		return $this->getPortlet(
-			'personal',
-			$this->getPersonalTools(),
-			'personaltools'
-		);
+		$user = $this->getSkin()->getUser();
+		$personalTools = $this->getPersonalTools();
+
+		$html = '';
+
+		// Move Echo badges out of default list - they should be visible outside of dropdown;
+		// may not even work at all inside one
+		$extraTools = [];
+		if ( isset( $personalTools['notifications-alert'] ) ) {
+			$extraTools['notifications-alert'] = $personalTools['notifications-alert'];
+			unset( $personalTools['notifications-alert'] );
+		}
+		if ( isset( $personalTools['notifications-notice'] ) ) {
+			$extraTools['notifications-notice'] = $personalTools['notifications-notice'];
+			unset( $personalTools['notifications-notice'] );
+		}
+		// Move ULS trigger if you want to better support the user options trigger
+		if ( isset( $personalTools['uls'] ) ) {
+			$extraTools['uls'] = $personalTools['uls'];
+			unset( $personalTools['uls'] );
+		}
+
+		// Re-label some messages
+		if ( isset( $personalTools['userpage'] ) ) {
+			$personalTools['userpage']['links'][0]['text'] = $this->getMsg( 'woogleshades-userpage' )->text();
+		}
+		if ( isset( $personalTools['mytalk'] ) ) {
+			$personalTools['mytalk']['links'][0]['text'] = $this->getMsg( 'woogleshades-talkpage' )->text();
+		}
+
+		// Dropdown header
+		if ( $user->isLoggedIn() ) {
+			$headerMsg = [ 'woogleshades-loggedinas', $user->getName() ];
+		} else {
+			$headerMsg = [ 'woogleshades-notloggedin', $user->getName() ];
+		}
+		$html .= Html::openElement( 'div', [ 'id' => 'mw-user-links' ] );
+
+		// Place the extra icons/outside stuff
+		if ( !empty( $extraTools ) ) {
+			$iconList = '';
+			foreach ( $extraTools as $key => $item ) {
+				$iconList .= $this->makeListItem( $key, $item );
+			}
+
+			$html .= Html::rawElement(
+				'div',
+				[ 'id' => 'p-personal-extra', 'class' => 'p-body' ],
+				Html::rawElement( 'ul', [], $iconList )
+			);
+		}
+
+		$html .= $this->getPortlet( 'personal', $personalTools, $headerMsg );
+
+		$html .= Html::closeElement( 'div' );
+
+		return $html;
 	}
 
 	/**
 	 * Generates siteNotice, if any
-	 * @return string html
+	 *
+	 * @return string HTML
 	 */
 	protected function getSiteNotice() {
 		return $this->getIfExists( 'sitenotice', [
@@ -338,7 +450,8 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 
 	/**
 	 * Generates new talk message banner, if any
-	 * @return string html
+	 *
+	 * @return string HTML
 	 */
 	protected function getNewTalk() {
 		return $this->getIfExists( 'newtalk', [
@@ -349,7 +462,8 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 
 	/**
 	 * Generates subtitle stuff, if any
-	 * @return string html
+	 *
+	 * @return string HTML
 	 */
 	protected function getPageSubtitle() {
 		return $this->getIfExists( 'subtitle', [ 'wrapper' => 'p' ] );
@@ -357,7 +471,8 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 
 	/**
 	 * Generates category links, if any
-	 * @return string html
+	 *
+	 * @return string HTML
 	 */
 	protected function getCategoryLinks() {
 		return $this->getIfExists( 'catlinks' );
@@ -365,7 +480,8 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 
 	/**
 	 * Generates data after content stuff, if any
-	 * @return string html
+	 *
+	 * @return string HTML
 	 */
 	protected function getDataAfterContent() {
 		return $this->getIfExists( 'dataAfterContent' );
@@ -377,7 +493,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 	 * @param string $object name of thing
 	 * @param array $setOptions
 	 *
-	 * @return string html
+	 * @return string HTML
 	 */
 	protected function getIfExists( $object, $setOptions = [] ) {
 		$options = $setOptions + [
@@ -410,7 +526,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 	 * @param null|string|array $msg
 	 * @param array $setOptions random crap to rename/do/whatever
 	 *
-	 * @return string html
+	 * @return string HTML
 	 */
 	protected function getPortlet( $name, $content, $msg = null, $setOptions = [] ) {
 		// random stuff to override with any provided options
@@ -453,6 +569,10 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 		$labelId = Sanitizer::escapeIdForAttribute( "p-$name-label" );
 
 		if ( is_array( $content ) ) {
+			if ( !count( $content ) ) {
+				return '';
+			}
+
 			$contentText = Html::openElement( 'ul',
 				[ 'lang' => $this->get( 'userlang' ), 'dir' => $this->get( 'dir' ) ]
 			);
@@ -475,8 +595,10 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 			}
 
 			$contentText .= Html::closeElement( 'ul' );
-		} else {
+		} elseif ( strlen( $content ) > 1 ) {
 			$contentText = $content;
+		} else {
+			return '';
 		}
 
 		// Special handling for role=search and other weird things
@@ -528,7 +650,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 	 * @param string $hook event
 	 * @param array $hookOptions args
 	 *
-	 * @return string html
+	 * @return string HTML
 	 */
 	protected function deprecatedHookHack( $hook, $hookOptions = [] ) {
 		$hookContents = '';
@@ -556,7 +678,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 	 * * 'link-style' to pass to getFooterLinks: "flat" to disable categorisation of links in a
 	 *   nested array
 	 *
-	 * @return string html
+	 * @return string HTML
 	 */
 	protected function getFooterBlock( $setOptions = [] ) {
 		// Set options and fill in defaults
