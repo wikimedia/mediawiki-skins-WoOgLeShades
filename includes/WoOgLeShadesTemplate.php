@@ -12,8 +12,10 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 		$html = '';
 		$html .= $this->get( 'headelement' );
 
-		$html .= Html::rawElement( 'div', [ 'id' => 'mw-wrapper' ],
+		$html .=  Html::element( 'div', [ 'id' => 'menus-cover' ] ) .
+			Html::rawElement( 'div', [ 'id' => 'mw-wrapper' ],
 			Html::rawElement( 'div', [ 'id' => 'header' ],
+				Html::rawElement( 'div', [ 'id' => 'mw-navigation-outer-outer' ],
 				Html::rawElement( 'div', [ 'id' => 'mw-navigation-outer' ],
 					Html::rawElement( 'div', [ 'id' => 'mw-navigation' ],
 						$this->getLogo() .
@@ -36,42 +38,43 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 							$this->getGlobalLinks()
 
 						) .
+						Html::element( 'div', [ 'id' => 'main-menu-toggle' ] ) .
+						Html::element( 'div', [ 'id' => 'personal-menu-toggle' ] ) .
 						$this->getClear()
 					)
-				) .
-				Html::rawElement( 'div', [ 'id' => 'mw-sidebar-outer' ],
-					Html::rawElement ( 'div', [ 'id' => 'mw-sidebar' ],
-						$this->getBanner() .
-						// Site navigation/sidebar
-						Html::rawElement(
-							'div',
-							[ 'id' => 'site-navigation' ],
-							$this->getSiteNavigation() .
-							// Toolbox
-							$this->getPortlet(
-								'tb',
-								$this->getToolbox(),
-								'toolbox'
-							)
-						) .
-						$this->getClear()
-					)
-				).
-				// Page editing and tools
-				Html::rawElement( 'div', [ 'id' => 'page-tools-outer' ],
-					Html::rawElement( 'div', [ 'id' => 'page-tools' ],
-						Html::rawElement( 'div', [ 'id' => 'page-tools-left' ],
-							$this->getPortlet(
-								'namespaces',
-								$this->data['content_navigation']['namespaces']
-							)
-						) .
-						$this->getPageToolsRight() .
-						$this->getClear()
-					)
-				)
+				) )
 			) .
+			Html::rawElement( 'div', [ 'id' => 'mw-column' ],
+			Html::rawElement( 'div', [ 'id' => 'mw-sidebar-outer' ],
+				Html::rawElement ( 'div', [ 'id' => 'mw-sidebar' ],
+					$this->getBanner() .
+					// Site navigation/sidebar
+					Html::rawElement(
+						'div',
+						[ 'id' => 'site-navigation' ],
+						$this->getSiteNavigation() .
+						// Toolbox
+						$this->getPortlet(
+							'tb',
+							$this->getToolbox(),
+							'toolbox'
+						)
+					) .
+					$this->getClear()
+				)
+			).
 			Html::rawElement( 'div', [ 'id' => 'content-outer' ],
+				// Page editing and tools
+				Html::rawElement( 'div', [ 'id' => 'page-tools' ],
+					Html::rawElement( 'div', [ 'id' => 'page-tools-left' ],
+						$this->getPortlet(
+							'namespaces',
+							$this->data['content_navigation']['namespaces']
+						)
+					) .
+					$this->getPageToolsRight() .
+					$this->getClear()
+				) .
 				Html::rawElement( 'div', [ 'class' => 'mw-body', 'id' => 'content', 'role' => 'main' ],
 					$this->getSiteNotice() .
 					$this->getNewTalk() .
@@ -105,9 +108,11 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 						$this->get( 'debughtml' )
 					)
 				)
-			) .
-			Html::rawElement( 'div', [ 'id' => 'footer-outer' ],
-				$this->getFooterBlock()
+			) ) .
+			Html::rawElement( 'div', [ 'id' => 'footer-outer-outer' ],
+				Html::rawElement( 'div', [ 'id' => 'footer-outer' ],
+					$this->getFooterBlock()
+				)
 			)
 		);
 
@@ -244,8 +249,9 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 	 *
 	 * @param string $linksMessage
 	 * @param string $id
+	 * @param bool $doubleHeader Stupid mobile hack
 	 */
-	protected function getNavigation( $linksMessage, $id ) {
+	protected function getNavigation( $linksMessage, $id, $doubleHeader = false ) {
 		$message = trim( $this->getMsg( $linksMessage )->text() );
 		$lines = array_slice( explode( "\n", $message ), 0, 10 );
 		$links = [];
@@ -302,7 +308,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 			$links[] = $item;
 		}
 
-		return $this->getPortlet( $id, $links );
+		return $this->getPortlet( $id, $links, null, [ 'extra-header' => $doubleHeader ] );
 	}
 
 	/**
@@ -313,7 +319,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 	protected function getGlobalLinks() {
 		$html = '';
 		if ( !$this->getMsg( 'global-links-menu' )->isDisabled() ) {
-			$html = $this->getNavigation( 'global-links-menu', 'global-links' );
+			$html = $this->getNavigation( 'global-links-menu', 'global-links', true );
 		}
 
 		return $html;
@@ -327,7 +333,12 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 	protected function getLanguageLinks() {
 		$html = '';
 		if ( $this->data['language_urls'] !== false ) {
-			$html .= $this->getPortlet( 'lang', $this->data['language_urls'], 'otherlanguages' );
+			$html .= $this->getPortlet(
+				'lang',
+				$this->data['language_urls'],
+				'otherlanguages',
+				[ 'extra-header' => true ]
+			);
 		}
 
 		return $html;
@@ -344,7 +355,9 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 		if ( count( $this->data['content_navigation']['variants'] ) > 0 ) {
 			$html .= $this->getPortlet(
 				'variants',
-				$this->data['content_navigation']['variants']
+				$this->data['content_navigation']['variants'],
+				null,
+				[ 'extra-header' => true ]
 			);
 		}
 
@@ -359,8 +372,20 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 	 */
 	protected function getPageToolsRight() {
 		$html = '';
-		$junk = $this->getPortlet( 'views', $this->data['content_navigation']['views'] ) .
-			$this->getPortlet( 'actions', $this->data['content_navigation']['actions'] ) .
+
+		$views = $this->data['content_navigation']['views'];
+		$actions = $this->data['content_navigation']['actions'];
+		if ( isset( $actions['unwatch'] ) ) {
+			$views['unwatch'] = $actions['unwatch'];
+			unset( $actions['unwatch'] );
+		}
+		if ( isset( $actions['watch'] ) ) {
+			$views['watch'] = $actions['watch'];
+			unset( $actions['watch'] );
+		}
+
+		$junk = $this->getPortlet( 'views', $views ) .
+			$this->getPortlet( 'actions', $actions, null, [ 'extra-header' => true ] ) .
 			$this->getVariants() .
 			$this->getLanguageLinks();
 
@@ -544,7 +569,8 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 			// option to stick arbitrary stuff at the beginning of the ul
 			'list-prepend' => '',
 			// old toolbox hook support (use: [ 'SkinTemplateToolboxEnd' => [ &$skin, true ] ])
-			'hooks' => ''
+			'hooks' => '',
+			'extra-header' => false
 		];
 
 		// Handle the different $msg possibilities
@@ -573,7 +599,12 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 				return '';
 			}
 
-			$contentText = Html::openElement( 'ul',
+			$contentText = '';
+			if ( $options['extra-header'] ) {
+				$contentText .= Html::rawElement( 'h3', [], $msgString );
+			}
+
+			$contentText .= Html::openElement( 'ul',
 				[ 'lang' => $this->get( 'userlang' ), 'dir' => $this->get( 'dir' ) ]
 			);
 			$contentText .= $options['list-prepend'];

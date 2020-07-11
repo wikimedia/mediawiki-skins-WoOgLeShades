@@ -16,54 +16,12 @@ body {
 	background-color: @grey6;
 }
 
-#mw-navigation,
-#mw-sidebar,
-#page-tools,
-#content-header,
-#content,
-#footer {
-	max-width: @width;
-	margin: 0 auto;
-	position: relative;
-	box-sizing: border-box;
-}
-
 #mw-navigation {
-	padding: 0.5em 0 0;
-}
-
-#user-tools {
-	float: right;
-}
-
-// TODO: move ULS stuff to own file
-#p-personal-extra li#pt-uls {
-	margin-left: 0.5em;
-}
-
-#pt-uls .uls-trigger {
-	padding-top: 0.25em !important;
+	padding-top: 0.5em;
 }
 
 #p-personal h3 {
 	font-size: 1em;
-}
-
-#p-personal,
-#p-personal h3,
-#p-personal-extra,
-#p-personal-extra ul,
-#p-personal-extra li {
-	display: inline;
-	margin: 0;
-	padding: 0;
-	white-space: nowrap;
-}
-
-#p-search {
-	float: right;
-	clear: right;
-	margin: 0.5em 0;
 }
 
 #searchInput,
@@ -92,36 +50,21 @@ body {
 }
 
 #global-navigation {
-	max-height: 7em;
-
 	h3 {
 		margin: 0;
-		font-size: 2em;
 		font-weight: normal;
 
 		a {
 			color: @grey0;
 		}
 	}
-
-	ul {
-		margin: -0.125em 0 0;
-		padding: 0;
-		list-style: none;
-	}
-
-	li {
-		display: inline-block;
-		margin-right: 1em;
-	}
 }
 
 #mw-navigation-outer {
 	background: @grey1;
-	border-bottom: solid 1px darken( @grey2, 15% );
+	box-shadow: 0 0 2em inset rgba( 0, 0, 0, 0.125 );
 }
 
-#mw-sidebar-outer,
 #mw-navigation-outer {
 	color: @grey6;
 
@@ -130,61 +73,15 @@ body {
 	}
 }
 
-#mw-sidebar-outer {
-	background: @grey6;
-	color: @primarybold;
-	box-shadow: 0 0 20px rgba( 0, 0, 0, 0.25 );
-	padding: 0 0 0.15em;
-	border-top: solid 4px @primarybold-light;
-	border-bottom: solid 3px @grey3;
-
-	a {
-		color: @primarybright;
-	}
-}
-
-#p-personal,
-#site-navigation .mw-portlet,
-#p-actions,
-#p-variants,
-#p-lang {
-	.dropdown();
-}
-
-#p-personal h3 {
-	.background-image-svg( 'images/arrow-down-white.svg', 'images/arrow-down.png' );
-}
-
-#site-navigation .mw-portlet h3 {
-	.background-image-svg( 'images/arrow-down-blue.svg', 'images/arrow-down.png' );
-}
-
-#p-actions h3,
-#p-variants h3,
-#p-lang h3 {
-	.background-image-svg( 'images/arrow-down.svg', 'images/arrow-down.png' );
-}
-
-#site-navigation .mw-portlet h3 {
-	font-size: 1em;
-}
-
 #p-logo {
-	text-align: center;
-	float: left;
-
 	// Make logo image visible
 	// The class sets the background image from $wgLogo, but we still need to give it a size in order to show up
 	a.mw-wiki-logo {
-		float: left;
 		display: block;
 		content: '';
 		background-repeat: no-repeat;
 		background-position: 50% 50%;
-		width: 5em;
-		height: 5em;
 		background-size: contain;
-		margin: -0.5em 1em 0 0;
 	}
 }
 
@@ -198,17 +95,8 @@ body {
 	}
 }
 
-#site-navigation {
-	float: right;
-	margin-top: 0.3em;
-
-	.mw-portlet {
-		display: inline-block;
-	}
-}
-
 #page-tools {
-	padding: 0 0 1em;
+	padding-bottom: 1em;
 }
 
 #p-namespaces,
@@ -240,10 +128,6 @@ body {
 	}
 }
 
-#page-tools-outer {
-	border-top: solid 1px @grey6;
-}
-
 #page-tools-left,
 #page-tools-right {
 	background: @grey6;
@@ -261,7 +145,7 @@ body {
 #page-tools-right {
 	float: right;
 
-	h3 {
+	.mw-portlet > h3 {
 		font-size: 1em;
 		font-weight: normal;
 		display: inline-block;
@@ -272,6 +156,36 @@ body {
 	#p-lang {
 		display: inline-block;
 	}
+}
+
+#ca-watch a {
+	.ca-icon( 'images/star' );
+	.ca-icon-only();
+}
+
+#ca-unwatch a {
+	.ca-icon( 'images/star-filled' );
+	.ca-icon-only();
+}
+
+#p-lang > h3,
+#p-variants > h3 {
+	width: 1em;
+	height: 1em;
+	overflow: hidden;
+
+	&:before {
+		content: '';
+		height: 1.6em;
+	}
+}
+
+#p-lang > h3::before {
+	.ca-icon( 'images/languages' );
+}
+
+#p-variants > h3::before {
+	.ca-icon( 'images/variants' );
 }
 
 #siteSub {
@@ -286,10 +200,15 @@ body {
 
 #content-outer {
 	padding-bottom: 1.5em;
-	border-bottom: solid 4px @primarybold-light;
-	box-shadow: 0 15px 20px -10px rgba( 0, 0, 0, 0.15 );
+}
+
+#content {
 	position: relative;
 	z-index: 1;
+}
+
+#footer-outer-outer {
+	border-top: solid 4px @primarybold-light;
 }
 
 #footer-outer {
@@ -297,7 +216,8 @@ body {
 	z-index: 0;
 	background: @grey5;
 	color: @grey0;
-	border-top: solid 2px @grey6;
+	border-top: solid 1px @grey6;
+	box-shadow: 0 15px 20px -10px inset rgba( 0, 0, 0, 0.15 );
 }
 
 #footer {
@@ -339,6 +259,7 @@ body {
 .mw-body {
 	position: relative;
 	word-wrap: break-word;
+	box-sizing: border-box;
 
 	h1,
 	h2,
@@ -485,11 +406,10 @@ hr {
 	display: none;
 }
 
-ul#filetoc,
 .toc,
 .mw-warning {
 	display: table;
-	.box;
+	.box();
 	padding: 1.25em 1.75em;
 	margin-top: 1em;
 	margin-bottom: 1em;
@@ -498,9 +418,9 @@ ul#filetoc,
 
 .toc {
 	line-height: 1.2;
+	padding: 1em;
 
 	ul {
-		margin: 1em 0 0;
 		list-style: none;
 		text-align: left;
 	}
@@ -512,15 +432,35 @@ ul#filetoc,
 			margin-bottom: 0.5em;
 		}
 	}
+
+	a {
+		font-size: 90%;
+	}
 }
 
-ul#filetoc {
-	display: block;
-	margin-bottom: 2em;
-	border: none;
+.toctogglespan {
+	float: right;
+}
+
+.toctogglelabel {
+	color: @grey6;
+
+	&:hover {
+		color: lighten( @primarybright-light, 10% );
+	}
 }
 
 .mw-body .toctitle {
+	background: @grey1;
+	box-shadow: 0 1px 6px rgba( 0, 1, 0, 0.15 ),
+		0 0 1.5em inset rgba( 0, 0, 0, 0.125 ),
+		0 5px 10px rgba( 0, 0, 0, 0.125 );
+	border-radius: 3px 3px 0 0;
+	color: @grey6;
+	margin: -1em -1em 1em;
+	padding: 0.75em 1em 0.3em;
+	border-bottom: solid 3px @primarybold-light;
+
 	h2 {
 		font-size: 1em;
 		margin: 0;
@@ -529,42 +469,6 @@ ul#filetoc {
 		&:after {
 			display: none;
 		}
-	}
-}
-
-.toctogglespan {
-	float: right;
-}
-
-// TODO: move to separate file and attach to mediawiki.action.view.filepage module
-#file {
-	width: 100%;
-	overflow: hidden;
-	padding: 1em;
-	background: @grey1;
-	box-shadow: 0 1px 6px rgba( 0, 1, 0, 0.25 ),
-		0 0 20em inset rgba( 0, 0, 0, 0.85 ),
-		0 0 4em inset rgba( 0, 0, 0, 0.45 );
-	border-radius: 3px;
-	color: @grey6;
-	text-align: center;
-	box-sizing: border-box;
-
-	a {
-		color: @grey4;
-
-		&:hover {
-			color: @grey6;
-		}
-	}
-
-	img {
-		margin: auto;
-		margin-bottom: 0.5em;
-		border-radius: 2px;
-		box-shadow: 0 1px 6px rgba( 0, 1, 0, 0.15 );
-		height: auto;
-		max-width: 100%
 	}
 }
 
@@ -627,6 +531,11 @@ ul#filetoc {
 .mw-body li.gallerybox div.thumb {
 	.box;
 	padding: 0;
+}
+
+textarea {
+	width: 100%;
+	box-sizing: border-box;
 }
 
 // hidden

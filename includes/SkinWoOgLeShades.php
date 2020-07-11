@@ -27,7 +27,7 @@ class SkinWoOgLeShades extends SkinTemplate {
 			'skins.woogleshades.js'
 		] );
 
-		// TODO Ditch this and come up with an actual font stack
+		// TODO Better source, actual font stack sucks.
 		$out->addStyle( 'https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i', 'screen' );
 		$out->addStyle( 'https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700,700i', 'screen' );
 	}

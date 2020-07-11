@@ -1,11 +1,14 @@
 {
 	"name": "WoOgLeShades",
 	"version": "1.0",
-	"author": "...",
+	"author": [
+		"mister old man sir",
+		"..."
+	],
 	"url": "https://www.mediawiki.org/wiki/Skin:WoOgLeShades",
 	"descriptionmsg": "woogleshades-desc",
 	"namemsg": "skinname-woogleshades",
-	"license-name": "CC0-1.0",
+	"license-name": "GPL-2.0-or-later",
 	"type": "skin",
 	"ValidSkinNames": {
 		"woogleshades": "WoOgLeShades"
@@ -25,11 +28,17 @@
 				"resources/screen-common.less": {
 					"media": "screen"
 				},
+				"resources/screen-desktop-sidebar.less": {
+					"media": "screen and (min-width: 1337px)"
+				},
+				"resources/screen-desktop-topnav.less": {
+					"media": "screen and (min-width: 701px) and (max-width: 1336px)"
+				},
 				"resources/screen-desktop.less": {
-					"media": "screen and (min-width: 751px)"
+					"media": "screen and (min-width: 701px)"
 				},
 				"resources/screen-mobile.less": {
-					"media": "screen and (max-width: 750px)"
+					"media": "screen and (max-width: 700px)"
 				},
 				"resources/print.css": {
 					"media": "print"
@@ -44,7 +53,10 @@
 	},
 	"ResourceModuleSkinStyles": {
 		"woogleshades": {
-			"+ext.echo.styles.badge": "resources/extensions/Echo.less"
+			"+ext.echo.styles.badge": "resources/extensions/Echo.less",
+			"+mediawiki.action.view.filepage": "resources/modules/filepage.less",
+			"+ext.uls.pt": "resources/extensions/ULS.less",
+			"+ext.visualEditor.desktopArticleTarget.noscript": "resources/extensions/VisualEditor.article.less"
 		}
 	},
 	"ResourceFileModulePaths": {
