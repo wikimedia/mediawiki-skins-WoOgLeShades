@@ -134,6 +134,8 @@ body {
 	display: inline-block;
 	box-shadow: 0 1px 6px rgba( 0, 1, 0, 0.15 ),
 		0 0 1.5em inset rgba( 0, 0, 0, 0.05 );
+	border: 1px @grey3;
+	border-style: none solid solid;
 	border-radius: 0 0 3px 3px;
 	padding: 0.25em 1em;
 }
@@ -509,6 +511,7 @@ hr {
 
 .thumbinner {
 	.box;
+	box-sizing: content-box;
 	padding: 0.5em;
 	/* Properly center framed thumbnail images (T219717) */
 	margin-left: auto;
@@ -525,7 +528,7 @@ hr {
 
 .thumbinner .thumbimage,
 .thumbborder {
-	border: solid 1px @grey4;
+	border: solid 1px @grey3;
 }
 
 .mw-body li.gallerybox div.thumb {
