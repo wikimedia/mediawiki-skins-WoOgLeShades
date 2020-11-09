@@ -35,7 +35,7 @@
 
 // Icons for the page actions menus (copied out of timeless)
 .ca-icon( @icon: '' ) {
-	.background-image-svg( '@{icon}.svg', '@{icon}.png' );
+	background-image: url( '@{icon}.svg' );
 	border: 0;
 	background-color: transparent;
 	background-repeat: no-repeat;
@@ -48,7 +48,7 @@
 // I'm too tired to figure this out so here's another one
 .ca-icon-wat( @icon: '' ) {
 	a {
-		.background-image-svg( '@{icon}-blue.svg', '@{icon}.png' );
+		background-image: url( '@{icon}-blue.svg' );
 		border: 0;
 		background-color: transparent;
 		background-repeat: no-repeat;
@@ -59,7 +59,7 @@
 	}
 
 	&.selected a {
-		.background-image-svg( '@{icon}.svg', '@{icon}.png' );
+		background-image: url( '@{icon}.svg' );
 	}
 }
 
@@ -114,7 +114,7 @@
 }
 
 .dropdown-toggle() {
-	.background-image-svg( 'images/arrow-down.svg', 'images/arrow-down.png' );
+	background-image: url( images/arrow-down.svg );
 	margin: -0.5em -0.35em -0.5em 1.25em;
 	font-weight: normal;
 	padding: 0.5em 1.35em 0.5em 0;
