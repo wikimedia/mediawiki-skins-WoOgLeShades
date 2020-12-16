@@ -56,7 +56,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 						// Toolbox
 						$this->getPortlet(
 							'tb',
-							$this->getToolbox(),
+							$this->data['sidebar']['TOOLBOX'],
 							'toolbox'
 						)
 					) .
@@ -252,7 +252,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 	 * @param bool $doubleHeader Stupid mobile hack
 	 */
 	protected function getNavigation( $linksMessage, $id, $doubleHeader = false ) {
-		$message = trim( $this->getMsg( $linksMessage )->text() );
+		$message = trim( $this->getMsg( $linksMessage )->inContentLanguage()->text() );
 		$lines = array_slice( explode( "\n", $message ), 0, 10 );
 		$links = [];
 		foreach ( $lines as $line ) {
@@ -270,13 +270,13 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 
 				// Pull out third item as a class
 				if ( count( $line_temp ) == 3 ) {
-					$item['class'] = htmlspecialchars( Sanitizer::escapeIdForAttribute( $line_temp[2] ) );
+					$item['class'] = Sanitizer::escapeIdForAttribute( $line_temp[2] );
 				}
 			} else {
 				$line = $line_temp[0];
 				$link = $line_temp[0];
 			}
-			$item['id'] =  htmlspecialchars( Sanitizer::escapeIdForAttribute( $line ) );
+			$item['id'] = Sanitizer::escapeIdForAttribute( $line );
 
 			// Determine what to show as the human-readable link description
 			if ( $this->getMsg( $line )->isDisabled() ) {
@@ -287,28 +287,20 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 				$item['text'] = $this->getMsg( $line )->text();
 			}
 
+			$href = '#';
 			if ( $link !== null ) {
 				if ( $this->getMsg( $line_temp[0] )->isDisabled() ) {
 					$link = $line_temp[0];
 				}
-				if ( Skin::makeInternalOrExternalUrl( $link ) ) {
-					$href = $link;
-				} else {
-					$title = Title::newFromText( $link );
-					if ( $title ) {
-						$title = $title->fixSpecialName();
-						$href = $title->getLocalURL();
-					} else {
-						$href = '#';
-					}
-				}
+
+				$href = Skin::makeInternalOrExternalUrl( $link );
 			}
 			$item['href'] = $href;
 
 			$links[] = $item;
 		}
 
-		return $this->getPortlet( $id, $links, null, [ 'extra-header' => $doubleHeader ] );
+		return $this->getPortlet( $id, $links, null, [ 'extra-header' => $doubleHeader, 'incontentlanguage' => true ] );
 	}
 
 	/**
@@ -318,7 +310,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 	 */
 	protected function getGlobalLinks() {
 		$html = '';
-		if ( !$this->getMsg( 'global-links-menu' )->isDisabled() ) {
+		if ( !$this->getMsg( 'global-links-menu' )->inContentLanguage()->isDisabled() ) {
 			$html = $this->getNavigation( 'global-links-menu', 'global-links', true );
 		}
 
@@ -558,19 +550,19 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 		$options = $setOptions + [
 			// extra classes/ids
 			'id' => 'p-' . $name,
-			'class' => 'mw-portlet',
-			'extra-classes' => '',
+			'class' => [ 'mw-portlet', 'emptyPortlet' => !$content ],
+			'extra-classes' => [],
 			// what to wrap the body list in, if anything
 			'body-wrapper' => 'div',
-			'body-id' => null,
+			'body-id' => '',
 			'body-class' => 'mw-portlet-body',
+			'body-extra-classes' => [],
 			// makeListItem options
 			'list-item' => [ 'text-wrapper' => [ 'tag' => 'span' ] ],
 			// option to stick arbitrary stuff at the beginning of the ul
 			'list-prepend' => '',
-			// old toolbox hook support (use: [ 'SkinTemplateToolboxEnd' => [ &$skin, true ] ])
-			'hooks' => '',
-			'extra-header' => false
+			'extra-header' => false,
+			'incontentlanguage' => false
 		];
 
 		// Handle the different $msg possibilities
@@ -581,7 +573,11 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 			$msgParams = $msg;
 			$msg = $msgString;
 		}
-		$msgObj = $this->getMsg( $msg );
+		if ( $options['incontentlanguage'] ) {
+			$msgObj = $this->getMsg( $msg )->inContentLanguage();
+		} else {
+			$msgObj = $this->getMsg( $msg );
+		}
 		if ( $msgObj->exists() ) {
 			if ( isset( $msgParams ) && !empty( $msgParams ) ) {
 				$msgString = $this->getMsg( $msg, $msgParams )->parse();
@@ -611,41 +607,19 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 			foreach ( $content as $key => $item ) {
 				$contentText .= $this->makeListItem( $key, $item, $options['list-item'] );
 			}
-			// Compatibility with extensions still using SkinTemplateToolboxEnd or similar
-			if ( is_array( $options['hooks'] ) ) {
-				foreach ( $options['hooks'] as $hook ) {
-					if ( is_string( $hook ) ) {
-						$hookOptions = [];
-					} else {
-						// it should only be an array otherwise
-						$hookOptions = array_values( $hook )[0];
-						$hook = array_keys( $hook )[0];
-					}
-					$contentText .= $this->deprecatedHookHack( $hook, $hookOptions );
-				}
-			}
-
 			$contentText .= Html::closeElement( 'ul' );
-		} elseif ( strlen( $content ) > 1 ) {
-			$contentText = $content;
 		} else {
-			return '';
+			$contentText = $content;
 		}
 
 		// Special handling for role=search and other weird things
 		$divOptions = [
 			'role' => 'navigation',
+			'class' => $this->mergeClasses( $options['class'], $options['extra-classes'] ),
 			'id' => Sanitizer::escapeIdForAttribute( $options['id'] ),
 			'title' => Linker::titleAttrib( $options['id'] ),
-			'aria-labelledby' => $labelId
+			'aria-labelledby' => $labelId,
 		];
-		if ( !is_array( $options['class'] ) ) {
-			$class = [ $options['class'] ];
-		}
-		if ( !is_array( $options['extra-classes'] ) ) {
-			$extraClasses = [ $options['extra-classes'] ];
-		}
-		$divOptions['class'] = array_merge( $class, $extraClasses );
 
 		$labelOptions = [
 			'id' => $labelId,
@@ -653,9 +627,10 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 			'dir' => $this->get( 'dir' )
 		];
 
+		// @phan-suppress-next-line PhanSuspiciousValueComparison
 		if ( $options['body-wrapper'] !== 'none' ) {
-			$bodyDivOptions = [ 'class' => $options['body-class'] ];
-			if ( is_string( $options['body-id'] ) ) {
+			$bodyDivOptions = [ 'class' => $this->mergeClasses( $options['body-class'], $options['body-extra-classes'] ) ];
+			if ( strlen( $options['body-id'] ) ) {
 				$bodyDivOptions['id'] = $options['body-id'];
 			}
 			$body = Html::rawElement( $options['body-wrapper'], $bodyDivOptions,
@@ -675,25 +650,25 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 	}
 
 	/**
-	 * Wrapper to catch output of old hooks expecting to write directly to page
-	 * We no longer do things that way.
+	 * Helper function for getPortlet
 	 *
-	 * @param string $hook event
-	 * @param array $hookOptions args
+	 * Merge all provided css classes into a single array
+	 * Account for possible different input methods matching what Html::element stuff takes
 	 *
-	 * @return string HTML
+	 * @param string|array $class base portlet/body class
+	 * @param string|array $extraClasses any extra classes to also include
+	 *
+	 * @return array all classes to apply
 	 */
-	protected function deprecatedHookHack( $hook, $hookOptions = [] ) {
-		$hookContents = '';
-		ob_start();
-		Hooks::run( $hook, $hookOptions );
-		$hookContents = ob_get_contents();
-		ob_end_clean();
-		if ( !trim( $hookContents ) ) {
-			$hookContents = '';
+	protected function mergeClasses( $class, $extraClasses ) {
+		if ( !is_array( $class ) ) {
+			$class = [ $class ];
+		}
+		if ( !is_array( $extraClasses ) ) {
+			$extraClasses = [ $extraClasses ];
 		}
 
-		return $hookContents;
+		return array_merge( $class, $extraClasses );
 	}
 
 	/**

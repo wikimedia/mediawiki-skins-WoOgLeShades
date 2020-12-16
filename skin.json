@@ -1,6 +1,6 @@
 {
 	"name": "WoOgLeShades",
-	"version": "1.0",
+	"version": "1.1",
 	"author": [
 		"mister old man sir",
 		"..."
@@ -10,8 +10,26 @@
 	"namemsg": "skinname-woogleshades",
 	"license-name": "GPL-2.0-or-later",
 	"type": "skin",
+	"requires": {
+		"MediaWiki": ">= 1.36"
+	},
 	"ValidSkinNames": {
-		"woogleshades": "WoOgLeShades"
+		"woogleshades": {
+			"displayname":  "WoOgLeShades",
+			"class": "SkinWoOgLeShades",
+			"args": [
+				{
+					"name": "woogleshades",
+					"responsive": true,
+					"styles": [
+						"skins.woogleshades"
+					],
+					"scripts": [
+						"skins.woogleshades.js"
+					]
+				}
+			]
+		}
 	},
 	"MessagesDirs": {
 		"WoOgLeShades": [
@@ -20,11 +38,18 @@
 	},
 	"ResourceModules": {
 		"skins.woogleshades": {
+			"targets": [
+				"desktop",
+				"mobile"
+			],
 			"class": "ResourceLoaderSkinModule",
+			"features": {
+				"content-links": true,
+				"logo": true,
+				"legacy": true,
+				"normalize": true
+			},
 			"styles": {
-				"resources/libraries/normalise.css": {
-					"media": "screen"
-				},
 				"resources/screen-common.less": {
 					"media": "screen"
 				},
@@ -46,6 +71,10 @@
 			}
 		},
 		"skins.woogleshades.js": {
+			"targets": [
+				"desktop",
+				"mobile"
+			],
 			"scripts": [
 				"resources/main.js"
 			]
