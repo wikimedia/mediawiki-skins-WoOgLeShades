@@ -34,14 +34,14 @@ body {
 #searchInput {
 	border: solid 1px @grey6;
 	background: @grey6;
-	box-shadow: 0 3px 7px inset rgba( 0, 0, 0, 0.15 );
+	box-shadow: 0 3px 7px rgba( 0, 0, 0, 0.15 ) inset;
 }
 
 .searchButton {
 	border: solid 1px @grey3;
 	background: @grey5;
 	box-shadow: 0 1px 6px rgba( 0, 1, 0, 0.15 ),
-		0 0 0.5em inset rgba( 0, 0, 0, 0.015 );
+		0 0 0.5em rgba( 0, 0, 0, 0.015 ) inset;
 	color: @grey0;
 	font-weight: bold;
 	text-shadow: 0 -2px 0 @grey6;
@@ -61,7 +61,7 @@ body {
 
 #mw-navigation-outer {
 	background: @grey1;
-	box-shadow: 0 0 2em inset rgba( 0, 0, 0, 0.125 );
+	box-shadow: 0 0 2em rgba( 0, 0, 0, 0.125 ) inset;
 }
 
 #mw-navigation-outer {
@@ -132,7 +132,7 @@ body {
 	background: @grey6;
 	display: inline-block;
 	box-shadow: 0 1px 6px rgba( 0, 1, 0, 0.15 ),
-		0 0 1.5em inset rgba( 0, 0, 0, 0.05 );
+		0 0 1.5em rgba( 0, 0, 0, 0.05 ) inset;
 	border: 1px @grey3;
 	border-style: none solid solid;
 	border-radius: 0 0 3px 3px;
@@ -218,7 +218,7 @@ body {
 	background: @grey5;
 	color: @grey0;
 	border-top: solid 1px @grey6;
-	box-shadow: 0 15px 20px -10px inset rgba( 0, 0, 0, 0.15 );
+	box-shadow: 0 15px 20px -10px rgba( 0, 0, 0, 0.15 ) inset;
 }
 
 #footer {
@@ -367,11 +367,12 @@ a {
 // Some content stuff
 .mw-indicators {
 	float: right;
-	margin: 1.5em 0 0 1em;
+	margin: 1em 0 0 1em;
 }
 
 .mw-indicator {
 	display: inline-block;
+	margin-right: 0.5em;
 }
 
 div.magnify a {
@@ -454,7 +455,7 @@ hr {
 .mw-body .toctitle {
 	background: @grey1;
 	box-shadow: 0 1px 6px rgba( 0, 1, 0, 0.15 ),
-		0 0 1.5em inset rgba( 0, 0, 0, 0.125 ),
+		0 0 1.5em rgba( 0, 0, 0, 0.125 ) inset,
 		0 5px 10px rgba( 0, 0, 0, 0.125 );
 	border-radius: 3px 3px 0 0;
 	color: @grey6;
