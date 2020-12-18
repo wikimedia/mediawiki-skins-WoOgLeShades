@@ -9,16 +9,23 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 	 * Outputs the entire contents of the page
 	 */
 	public function execute() {
+		$globalLinks = $this->getGlobalLinks();
+		if ( $globalLinks === '' ) {
+			$headerClass = 'no-global-links';
+		} else {
+			$headerClass = 'has-global-links';
+		}
+
 		$html = '';
 		$html .= $this->get( 'headelement' );
 
 		$html .=  Html::element( 'div', [ 'id' => 'menus-cover' ] ) .
-			Html::rawElement( 'div', [ 'id' => 'mw-wrapper' ],
+			Html::rawElement( 'div', [ 'id' => 'mw-wrapper', 'class' => $headerClass ],
 			Html::rawElement( 'div', [ 'id' => 'header' ],
 				Html::rawElement( 'div', [ 'id' => 'mw-navigation-outer-outer' ],
 				Html::rawElement( 'div', [ 'id' => 'mw-navigation-outer' ],
 					Html::rawElement( 'div', [ 'id' => 'mw-navigation' ],
-						$this->getLogo() .
+						$this->getLogo( 'p-logo', $globalLinks ) .
 						Html::rawElement(
 							'h2',
 							[],
@@ -35,7 +42,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 						Html::rawElement(
 							'div',
 							[ 'id' => 'global-navigation' ],
-							$this->getGlobalLinks()
+							$globalLinks
 
 						) .
 						Html::element( 'div', [ 'id' => 'main-menu-toggle' ] ) .
@@ -124,32 +131,61 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 	}
 
 	/**
-	 * Generates the logo image
+	 * Get the the logo image, as well as site banner if we're not doing global links
 	 *
-	 * @param string $id ID for the element
+	 * @param string $id
+	 * @param string $globalLinks the assembled global links block
 	 *
-	 * @return string HTML
+	 * @return string html
 	 */
-	protected function getLogo( $id = 'p-logo' ) {
-		$html = Html::openElement(
-			'div',
-			[
-				'id' => $id,
-				'class' => 'mw-portlet',
-				'role' => 'banner'
-			]
-		);
-		$html .= Html::element(
-			'a',
-			[
-				'href' => $this->data['nav_urls']['mainpage']['href'],
+	protected function getLogo( $id = 'p-logo', $globalLinks = '' ) {
+		$config = $this->getSkin()->getContext()->getConfig();
+		$html = '';
+
+		$html .= Html::rawElement( 'div', [ 'class' => 'p-logo', 'role' => 'banner' ],
+			Html::element( 'a', array_merge( [
 				'class' => 'mw-wiki-logo',
-			] + Linker::tooltipAndAccesskeyAttribs( 'p-logo' )
+				'href' => $this->data['nav_urls']['mainpage']['href']
+			], Linker::tooltipAndAccesskeyAttribs( 'p-logo' ) ) )
 		);
 
-		$html .= Html::closeElement( 'div' );
+		if ( $globalLinks === '' ) {
+			$subtitleText = $this->getMsg( 'sitesubtitle' )->inContentLanguage()->text();
+			$bannerClass = [ 'mw-portlet', 'p-banner' ];
+			if ( strlen( $subtitleText ) > 1 ) {
+				$subtitle = Html::element( 'div', [ 'class' => 'sitesubtitle' ], $subtitleText );
+				$bannerClass[] = 'full-banner';
+			} else {
+				$subtitle = '';
+				$bannerClass[] = 'title-banner';
+			}
 
-		return $html;
+			// Wordmark image! Fancy!
+			$logos = ResourceLoaderSkinModule::getAvailableLogos( $config );
+			if ( isset( $logos['wordmark'] ) ) {
+				$wordmarkData = $logos['wordmark'];
+				$wordmark = Html::element( 'img', [
+					'src' => $wordmarkData['src'],
+					'height' => $wordmarkData['height'] ?? null,
+					'width' => $wordmarkData['width'] ?? null,
+				] );
+			} else {
+				$wordmark = Html::element( 'div', [ 'class' => 'wordmark-text' ], $this->getMsg( 'sitetitle' )->text() );
+			}
+
+			$html .= Html::rawElement( 'div', [ 'class' => $bannerClass ],
+				Html::rawElement( 'div', [ 'class' => 'sitetitle', 'role' => 'banner' ],
+					Html::rawElement(
+						'a',
+						[ 'href' => $this->data['nav_urls']['mainpage']['href'] ],
+						$wordmark
+					)
+				) .
+				$subtitle
+			);
+		}
+
+		return Html::rawElement( 'div', [ 'id' => $id, 'class' => 'mw-portlet' ], $html );
 	}
 
 	/**

@@ -26,7 +26,7 @@
 
 #site-navigation {
 	float: right;
-	margin-top: 0.3em;
+	padding-top: 0.3em;
 
 	.mw-portlet {
 		display: inline-block;
@@ -47,4 +47,31 @@
 
 #content-outer {
 	border-top: solid 1px @grey6;
+}
+
+.no-global-links {
+	// Hide redundant banner and put nav on left
+	#p-banner {
+		display: none;
+	}
+
+	#site-navigation {
+		float: unset;
+
+		.mw-portlet:not( #p-tb ) {
+			h3 {
+				margin-left: 0;
+				margin-right: 1.25em;
+			}
+
+			&:hover .mw-portlet-body {
+				right: unset;
+				left: 0;
+			}
+		}
+	}
+
+	#p-tb {
+		float: right;
+	}
 }
