@@ -461,7 +461,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 		}
 
 		// Dropdown header
-		if ( $user->isLoggedIn() ) {
+		if ( $user->isRegistered() ) {
 			$headerMsg = [ 'woogleshades-loggedinas', $user->getName() ];
 		} else {
 			$headerMsg = [ 'woogleshades-notloggedin', $user->getName() ];
