@@ -131,7 +131,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 	}
 
 	/**
-	 * Get the the logo image, as well as site banner if we're not doing global links
+	 * Get the logo image, as well as site banner if we're not doing global links
 	 *
 	 * @param string $id
 	 * @param string $globalLinks the assembled global links block
