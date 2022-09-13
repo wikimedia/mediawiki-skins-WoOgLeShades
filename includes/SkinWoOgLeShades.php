@@ -5,9 +5,6 @@
  * @ingroup Skins
  */
 class SkinWoOgLeShades extends SkinTemplate {
-	public $stylename = 'WoOgLeShades',
-		$template = 'WoOgLeShadesTemplate';
-
 	/**
 	 * Add CSS via ResourceLoader
 	 *

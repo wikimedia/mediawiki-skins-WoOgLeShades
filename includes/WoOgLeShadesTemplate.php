@@ -17,7 +17,6 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 		}
 
 		$html = '';
-		$html .= $this->get( 'headelement' );
 
 		$html .=  Html::element( 'div', [ 'id' => 'menus-cover' ] ) .
 			Html::rawElement( 'div', [ 'id' => 'mw-wrapper', 'class' => $headerClass ],
@@ -122,10 +121,6 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 				)
 			)
 		);
-
-		$html .= $this->getTrail();
-		$html .= Html::closeElement( 'body' );
-		$html .= Html::closeElement( 'html' );
 
 		echo $html;
 	}
@@ -671,10 +666,10 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 			}
 			$body = Html::rawElement( $options['body-wrapper'], $bodyDivOptions,
 				$contentText .
-				$this->getAfterPortlet( $name )
+				$this->getSkin()->getAfterPortlet( $name )
 			);
 		} else {
-			$body = $contentText . $this->getAfterPortlet( $name );
+			$body = $contentText . $this->getSkin()->getAfterPortlet( $name );
 		}
 
 		$html = Html::rawElement( 'div', $divOptions,
