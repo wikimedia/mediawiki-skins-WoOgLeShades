@@ -238,7 +238,11 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 			Html::label( $this->getMsg( 'search' )->escaped(), 'searchInput' )
 		);
 		$html .= $this->makeSearchInput( [ 'id' => 'searchInput' ] );
-		$html .= $this->makeSearchButton( 'go', [ 'id' => 'searchGoButton', 'class' => 'searchButton' ] );
+		$html .= $this->makeSearchButton( 'go', [
+			'id' => 'searchGoButton',
+			'class' => 'searchButton',
+			'value' => $this->getMsg( 'searcharticle' )->text()
+		] );
 		$html .= Html::closeElement( 'form' );
 
 		return $html;
