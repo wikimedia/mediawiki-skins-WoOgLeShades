@@ -1,9 +1,21 @@
 /* Styles for print view and printing */
 
-/* Hide some extra stuff from print view (some of the navigation is already hidden automatically, but not all) */
+/* Hide some extra stuff from print view */
+.noprint,
+#header,
+#mw-sidebar-outer,
+#page-tools,
 .mw-indicators,
 #p-logo,
 #catlinks,
-#mw-footer {
+#mw-footer,
+#footer-icons,
+#footer-places {
 	display: none;
+}
+
+/* Make links boring black instead of blue and underlined */
+a {
+	color: #000;
+	text-decoration: none;
 }
