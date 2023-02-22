@@ -556,6 +556,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 		$html = '';
 
 		if ( $this->data[$object] ) {
+			// @phan-suppress-next-line PhanSuspiciousValueComparison
 			if ( $options['wrapper'] == 'none' ) {
 				$html .= $this->get( $object );
 			} else {
@@ -729,6 +730,8 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 			'link-style' => null
 		];
 
+		// phpcs:ignore Generic.Files.LineLength.TooLong
+		'@phan-var array{id:string,class:string,order:string,link-prefix:string,link-style:?string} $options';
 		$validFooterIcons = $this->get( 'footericons' );
 		$validFooterLinks = $this->getFooterLinks( $options['link-style'] );
 
