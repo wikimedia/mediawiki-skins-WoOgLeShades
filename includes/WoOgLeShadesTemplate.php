@@ -18,7 +18,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 
 		$html = '';
 
-		$html .=  Html::element( 'div', [ 'id' => 'menus-cover' ] ) .
+		$html .= Html::element( 'div', [ 'id' => 'menus-cover' ] ) .
 			Html::rawElement( 'div', [ 'id' => 'mw-wrapper', 'class' => $headerClass ],
 			Html::rawElement( 'div', [ 'id' => 'header' ],
 				Html::rawElement( 'div', [ 'id' => 'mw-navigation-outer-outer' ],
@@ -42,7 +42,6 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 							'div',
 							[ 'id' => 'global-navigation' ],
 							$globalLinks
-
 						) .
 						Html::element( 'div', [ 'id' => 'main-menu-toggle' ] ) .
 						Html::element( 'div', [ 'id' => 'personal-menu-toggle' ] ) .
@@ -52,7 +51,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 			) .
 			Html::rawElement( 'div', [ 'id' => 'mw-column' ],
 			Html::rawElement( 'div', [ 'id' => 'mw-sidebar-outer' ],
-				Html::rawElement ( 'div', [ 'id' => 'mw-sidebar' ],
+				Html::rawElement( 'div', [ 'id' => 'mw-sidebar' ],
 					$this->getBanner() .
 					// Site navigation/sidebar
 					Html::rawElement(
