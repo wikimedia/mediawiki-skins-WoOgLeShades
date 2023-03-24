@@ -6,7 +6,7 @@
 		"wikimedia/mediawiki"
 	],
 	"rules": {
-		"es/no-object-values": "warn",
+		"es-x/no-object-values": "warn",
 		"no-jquery/no-global-selector": "warn",
 		"no-jquery/no-fade": "warn",
 		"no-jquery/no-each-util": "warn"
