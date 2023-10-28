@@ -4,6 +4,9 @@
  *
  * @ingroup Skins
  */
+
+use MediaWiki\MediaWikiServices;
+
 class WoOgLeShadesTemplate extends BaseTemplate {
 	/**
 	 * Outputs the entire contents of the page
@@ -200,7 +203,9 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 		);
 
 		$language = $this->getSkin()->getLanguage();
-		$siteTitle = $language->convert( $this->getMsg( 'sitetitle' )->escaped() );
+		$langConv = MediaWikiServices::getInstance()->getLanguageConverterFactory()
+					->getLanguageConverter( $language );
+		$siteTitle = $langConv->convert( $this->getMsg( 'sitetitle' )->escaped() );
 
 		$html .= Html::element(
 			'a',
@@ -234,7 +239,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 		$html .= Html::rawElement(
 			'h3',
 			[],
-			Html::label( $this->getMsg( 'search' )->escaped(), 'searchInput' )
+			Html::label( $this->getMsg( 'search' )->text(), 'searchInput' )
 		);
 		$html .= $this->makeSearchInput( [ 'id' => 'searchInput' ] );
 		$html .= $this->makeSearchButton( 'go', [
