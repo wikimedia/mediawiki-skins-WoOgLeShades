@@ -6,6 +6,7 @@
  */
 
 use MediaWiki\MediaWikiServices;
+use MediaWiki\ResourceLoader\SkinModule;
 
 class WoOgLeShadesTemplate extends BaseTemplate {
 	/**
@@ -158,7 +159,7 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 			}
 
 			// Wordmark image! Fancy!
-			$logos = ResourceLoaderSkinModule::getAvailableLogos( $config );
+			$logos = SkinModule::getAvailableLogos( $config );
 			if ( isset( $logos['wordmark'] ) ) {
 				$wordmarkData = $logos['wordmark'];
 				$wordmark = Html::element( 'img', [
