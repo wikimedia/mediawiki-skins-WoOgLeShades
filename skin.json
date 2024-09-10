@@ -11,7 +11,7 @@
 	"license-name": "GPL-2.0-or-later",
 	"type": "skin",
 	"requires": {
-		"MediaWiki": ">= 1.39"
+		"MediaWiki": ">= 1.43"
 	},
 	"ValidSkinNames": {
 		"woogleshades": {
@@ -48,12 +48,11 @@
 			"features": {
 				"content-links": true,
 				"logo": true,
-				"content-thumbnails": true,
+				"content-media": true,
 				"interface-message-box": true,
 				"interface-category": true,
 				"content-tables": true,
 				"i18n-ordered-lists": true,
-				"i18n-all-lists-margins": true,
 				"i18n-headings": true,
 				"normalize": true
 			},
