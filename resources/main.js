@@ -1,7 +1,7 @@
 /* JavaScript for the WoOgLeShades skin */
 
-$( function () {
-	var toggleTime = 200,
+$( () => {
+	let toggleTime = 200,
 		mobileMediaQuery = window.matchMedia( 'screen and (max-width: 701px)' ),
 		toggled = false,
 		toggles = {
@@ -17,7 +17,7 @@ $( function () {
 		if ( !toggled ) {
 			// swap hide method from screen-reader-friendly .hidden to display:none,
 			// as presumably people are actually poking a screen for this...
-			$.each( toggles, function ( toggle, target ) {
+			$.each( toggles, ( toggle, target ) => {
 				$( target ).hide();
 				$( target ).addClass( 'toggled' );
 			} );
@@ -26,8 +26,8 @@ $( function () {
 		}
 	}
 
-	$.each( toggles, function ( toggle, target ) {
-		$( toggle ).on( 'click', function () {
+	$.each( toggles, ( toggle, target ) => {
+		$( toggle ).on( 'click', () => {
 			if ( mobileMediaQuery.matches ) {
 				setToggled();
 				$( target ).fadeToggle( toggleTime );
@@ -37,7 +37,7 @@ $( function () {
 	} );
 
 	// Close menus on click outside
-	$( document ).on( 'click touchstart', function ( e ) {
+	$( document ).on( 'click touchstart', ( e ) => {
 		if ( $( e.target ).closest( '#menus-cover' ).length > 0 ) {
 			$( Object.values( toggles ).join( ', ' ) ).fadeOut( toggleTime );
 			$( '#menus-cover' ).fadeOut( toggleTime );
