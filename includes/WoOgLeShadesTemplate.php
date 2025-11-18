@@ -563,7 +563,6 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 		$html = '';
 
 		if ( $this->data[$object] ) {
-			// @phan-suppress-next-line PhanSuspiciousValueComparison
 			if ( $options['wrapper'] == 'none' ) {
 				$html .= $this->get( $object );
 			} else {
@@ -670,7 +669,6 @@ class WoOgLeShadesTemplate extends BaseTemplate {
 			'dir' => $this->get( 'dir' )
 		];
 
-		// @phan-suppress-next-line PhanSuspiciousValueComparison
 		if ( $options['body-wrapper'] !== 'none' ) {
 			$bodyDivOptions = [ 'class' => $this->mergeClasses( $options['body-class'], $options['body-extra-classes'] ) ];
 			if ( strlen( $options['body-id'] ) ) {
